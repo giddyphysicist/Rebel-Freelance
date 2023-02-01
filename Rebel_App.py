@@ -241,7 +241,7 @@ def Sidebar():
         hose_reels = st.selectbox('Hose Reels',options=['1 Reel, Left (standard)','1 Reel, Right', '2 Reels'],help='Choose Hose Reels')
         st.session_state['hose_reels'] = hose_reels
         
-        rims_tires = st.selectbox('Pump',options=['Factory wheels (standard)','Lifted super singles'],help='Choose Rims & Tires')
+        rims_tires = st.selectbox('Rims & Tires',options=['Factory wheels (standard)','Lifted super singles'],help='Choose Rims & Tires')
         st.session_state['rims_tires'] = rims_tires
         
         paint = st.selectbox('Paint',options=['None (standard)',' Non-OEM Red'],help='Choose Paint')
