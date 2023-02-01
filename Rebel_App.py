@@ -225,6 +225,7 @@ def Sidebar():
     # here, can add options to choose for configuring truck
         
     with st.sidebar:
+        st.header('Customize Parts')
         chassis = st.selectbox('Chassis', options=['Ram 5500 (standard)','Ford 550'],help='Choose Chassis')
         st.session_state['chassis'] = chassis
         
