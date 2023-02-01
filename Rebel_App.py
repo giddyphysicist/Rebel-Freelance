@@ -139,9 +139,31 @@ if 'element_to_name' not in st.session_state:
                                            'rims_tires':'Rims & Tires',
                                            'paint':'Paint'}
 
-
 if 'diffs' not in st.session_state:
     st.session_state['diffs'] = []
+    
+
+st.set_page_config(page_title='Rebel Price Estimator',
+                          # page_icon="",
+                          # layout='wide',
+                          initial_sidebar_state='auto')
+
+hide_menu_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    </style>
+"""
+
+# hide_menu_style = """
+#     <style>
+#     footer {visibility: hidden;}
+#     </style>
+# """
+
+
+st.markdown(hide_menu_style, unsafe_allow_html=True)
+
 
 def Header():
     pass
