@@ -145,7 +145,7 @@ if 'diffs' not in st.session_state:
 
 st.set_page_config(page_title='Rebel Price Estimator',
                           # page_icon="",
-                          # layout='wide',
+                           layout='wide',
                           initial_sidebar_state='auto')
 
 hide_menu_style = """
@@ -185,20 +185,29 @@ def PriceStats():
         choice = st.session_state[element]
         price = st.session_state['price_db'][element][choice]
         prices.append(price)
-    st.metric('Total Cost',f'${sum(prices):,.2f}')
+    _,c,_ = st.columns(3)
+    with c:
+        st.metric('Total Cost',f'${sum(prices):,.2f}')
 
 def PriceTally():
     
     for element in st.session_state['element_to_name'].keys():
         
         name = st.session_state['element_to_name'][element]
-        choice = st.session_state[element]
-        price = st.session_state['price_db'][element][choice]
+        
         st.header(name)
-        c1,c2= st.columns(2)    
+        c1,c2,c3= st.columns(3)    
         with c1:
-            st.info(f'{choice}')
+            value = st.selectbox(name, 
+                                 options=list(st.session_state['price_db'][element].keys()),
+                                 help=f'Choose {name}',
+                                 label_visibility="collapsed")
+            st.session_state[element] = value
+            choice = st.session_state[element]
+            price = st.session_state['price_db'][element][choice]
         with c2:
+            st.info(f'{choice}')
+        with c3:
             s = f'${price:,.2f}'
             st.info(s)
         # st.info(PriceTally_element(element))
@@ -226,8 +235,8 @@ def Sidebar():
         
     with st.sidebar:
         st.header('Customize Parts')
-        chassis = st.selectbox('Chassis', options=['Ram 5500 (standard)','Ford 550'],help='Choose Chassis')
-        st.session_state['chassis'] = chassis
+        # chassis = st.selectbox('Chassis', options=['Ram 5500 (standard)','Ford 550'],help='Choose Chassis')
+        # st.session_state['chassis'] = chassis
         
         body = st.selectbox('Body', options=['(standard)'],help='Choose Body')
         st.session_state['body'] = body
@@ -273,7 +282,10 @@ def Footer():
 def App():
     Header()
     # PriceTally()
-    Sidebar()
+    # Sidebar()
+    PriceStats()
+    PriceTally()
+    DiffFromStandard()
     Footer()
     
 
