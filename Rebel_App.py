@@ -86,6 +86,11 @@ Paint (2 choices)
 """
 import streamlit as st
 
+#### UTILITIES ####
+def round5(x):
+    return x + (5-x)%5
+####
+
 # define session state variables.
 
 if 'chassis' not in st.session_state:
@@ -117,19 +122,19 @@ if 'paint' not in st.session_state:
     st.session_state['paint'] = 'None (standard)'
 
 if 'price_db' not in st.session_state:
-    st.session_state['price_db'] = {'chassis':{'Ram 5500 (standard)':74_985.25,
-                                               'Ford 550':77_262.15},
-                                    'body':{'(standard)':16_668.41},
-                                    'pump':{'Hale Pump (standard)':13_526.13,
-                                            'Wateraxe Pump':126_434.18},
-                                    'tank':{'(standard)':4_225.00},
-                                    'hose_reels':{'1 Reel, Left (standard)':11_000.00,
-                                                  '1 Reel, Right':11_000.00, 
-                                                  '2 Reels':22_000.00},
-                                    'rims_tires':{'Factory wheels (standard)':0.00,
-                                                  'Lifted super singles':10_000.00},
-                                    'paint':{'None (standard)':0.00,
-                                             ' Non-OEM Red':6_000.00}}
+    st.session_state['price_db'] = {'chassis':{'Ram 5500 (standard)': round5(74_985.25),
+                                               'Ford 550': round5(77_262.15)},
+                                    'body':{'(standard)': round5(16_668.41)},
+                                    'pump':{'Hale Pump (standard)': round5(13_526.13),
+                                            'Wateraxe Pump': round5(126_434.18)},
+                                    'tank':{'(standard)': round5(4_225.00)},
+                                    'hose_reels':{'1 Reel, Left (standard)': round5(11_000.00),
+                                                  '1 Reel, Right': round5(11_000.00), 
+                                                  '2 Reels': round5(22_000.00)},
+                                    'rims_tires':{'Factory wheels (standard)': round5(0.00),
+                                                  'Lifted super singles': round5(10_000.00)},
+                                    'paint':{'None (standard)': round5(0.00),
+                                             ' Non-OEM Red': round5(6_000.00)}}
 if 'element_to_name' not in st.session_state:
     st.session_state['element_to_name'] = {'chassis':'Chassis',
                                            'body':'Body',
@@ -141,6 +146,9 @@ if 'element_to_name' not in st.session_state:
 
 if 'diffs' not in st.session_state:
     st.session_state['diffs'] = []
+    
+if 'costs' not in st.session_state:
+    st.session_state['costs'] = []
     
 
 st.set_page_config(page_title='Rebel Price Estimator',
@@ -165,9 +173,14 @@ hide_menu_style = """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
 
 
+
+
+
 def Header():
     pass
-    st.image('./Rebel Logo.png')
+    _,c,_ = st.columns(3)
+    with c:
+        st.image('./Rebel Logo.png',use_column_width='auto')
     st.markdown('# Rebel Strike Cost Estimator')
     # here, want title of page and logo
 
@@ -185,9 +198,10 @@ def PriceStats():
         choice = st.session_state[element]
         price = st.session_state['price_db'][element][choice]
         prices.append(price)
-    _,c,_ = st.columns(3)
-    with c:
-        st.metric('Total Cost',f'${sum(prices):,.2f}')
+    # _,c,_ = st.columns(3)
+    # with c:
+    st.metric('Total Cost',f'${sum(prices):,.2f}*')
+    st.caption('*Pricing is final at contract signing, as supply chain and availability/delivery is unknown')
 
 def PriceTally():
     
@@ -230,35 +244,35 @@ def PriceTally():
                 
                 # ''')
 
-def Sidebar():
-    # here, can add options to choose for configuring truck
+# def Sidebar():
+#     # here, can add options to choose for configuring truck
         
-    with st.sidebar:
-        st.header('Customize Parts')
-        # chassis = st.selectbox('Chassis', options=['Ram 5500 (standard)','Ford 550'],help='Choose Chassis')
-        # st.session_state['chassis'] = chassis
+#     with st.sidebar:
+#         st.header('Customize Parts')
+#         # chassis = st.selectbox('Chassis', options=['Ram 5500 (standard)','Ford 550'],help='Choose Chassis')
+#         # st.session_state['chassis'] = chassis
         
-        body = st.selectbox('Body', options=['(standard)'],help='Choose Body')
-        st.session_state['body'] = body
+#         body = st.selectbox('Body', options=['(standard)'],help='Choose Body')
+#         st.session_state['body'] = body
         
-        pump = st.selectbox('Pump',options=['Hale Pump (standard)','Wateraxe Pump'],help='Choose Pump')
-        st.session_state['pump'] = pump
+#         pump = st.selectbox('Pump',options=['Hale Pump (standard)','Wateraxe Pump'],help='Choose Pump')
+#         st.session_state['pump'] = pump
         
-        tank = st.selectbox('Tank',options=['(standard)'],help='Choose Tank')
-        st.session_state['tank'] = tank
+#         tank = st.selectbox('Tank',options=['(standard)'],help='Choose Tank')
+#         st.session_state['tank'] = tank
         
-        hose_reels = st.selectbox('Hose Reels',options=['1 Reel, Left (standard)','1 Reel, Right', '2 Reels'],help='Choose Hose Reels')
-        st.session_state['hose_reels'] = hose_reels
+#         hose_reels = st.selectbox('Hose Reels',options=['1 Reel, Left (standard)','1 Reel, Right', '2 Reels'],help='Choose Hose Reels')
+#         st.session_state['hose_reels'] = hose_reels
         
-        rims_tires = st.selectbox('Rims & Tires',options=['Factory wheels (standard)','Lifted super singles'],help='Choose Rims & Tires')
-        st.session_state['rims_tires'] = rims_tires
+#         rims_tires = st.selectbox('Rims & Tires',options=['Factory wheels (standard)','Lifted super singles'],help='Choose Rims & Tires')
+#         st.session_state['rims_tires'] = rims_tires
         
-        paint = st.selectbox('Paint',options=['None (standard)',' Non-OEM Red'],help='Choose Paint')
-        st.session_state['paint'] = paint
+#         paint = st.selectbox('Paint',options=['None (standard)',' Non-OEM Red'],help='Choose Paint')
+#         st.session_state['paint'] = paint
     
-    PriceStats()
-    PriceTally()
-    DiffFromStandard()
+#     PriceStats()
+#     PriceTally()
+#     DiffFromStandard()
 
 def DiffFromStandard():
     diffs = []
@@ -279,13 +293,30 @@ def DiffFromStandard():
 def Footer():
     pass
 
+def applyCss():
+    css = '''
+    <style>
+    img, div > div > .stButton, h2 > div > span, h1 > div > span, .stRadio, h3 > div > span, div[data-testid="stMetricValue"] > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        }
+
+    .stRadio > label {
+        display: none;
+        }
+    </style>'''
+    st.markdown(css,unsafe_allow_html=True)
+
 def App():
     Header()
     # PriceTally()
     # Sidebar()
-    PriceStats()
+    # PriceStats()
     PriceTally()
+    PriceStats()
     DiffFromStandard()
+    applyCss()
     Footer()
     
 
